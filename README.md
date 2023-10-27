@@ -70,3 +70,20 @@ https://docs.nestjs.com/
 - 根目录下新建`vercel.json`
 
 
+
+
+https://vercel.com
+
+1. 注册账号
+
+2. github上授权
+
+3. 添加项目
+- Add New => Project => 选择项目，Import
+
+
+4. 部署
+  - 手动部署
+  - shell部署
+  - Git actions部署
+
