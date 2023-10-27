@@ -13,20 +13,30 @@ jobs:
 
     runs-on: ubuntu-latest # 服务器环境
 
-    strategy:
-      matrix:
-        node-version: [ 16.x ]
-
     steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
+    - uses: actions/checkout@v1
+    - name: Install Node.js
+      uses: actions/setup-node@v1  # 安装 node 环境
+      with:
+        node-version: '16'  # 你的node版本
+    
+    - name: Cache
+      # 缓存命中结果会存储在steps.[id].outputs.cache-hit里，该变量在继后的step中可读
+      id: cache-dependencies
+      uses: actions/cache@v3
+      with:
+        path: ./node_modules # 缓存文件目录的路径
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }} # key中定义缓存标志位的生成方式。runner.OS指当前环境的系统
+        restore-keys: |
+          ${{ runner.os }}-node-
 
-      - run: npm install # 安装依赖
-      - run: npm run build # 打包
+    - name: Install npm dependencies
+      # 如果缓存标志位没命中，则执行该step。否则就跳过该step
+      if: steps.cache-dependencies.outputs.cache-hit != 'true'
+      run: npm install
+    
+    - name: Run build
+      run: npm run build # 打包
 
       - name: Deploy to Vercel # 部署到 Vercel
         run: npx vercel --token ${VERCEL_TOKEN} --prod
