@@ -1,0 +1,50 @@
+<html>
+  <head>
+    <script src="https://unpkg.com/axios@1.5.0/dist/axios.min.js"></script>
+  </head>
+  <body>
+    <h2>手机端二维码确认登录页面</h2>
+    <button id="111">登录账号111</button>
+    <button id="222">登录账号222</button>
+
+    <div>是否确认登录？</div>
+    <button id="confirm">确认登录</button>
+    <button id="cancel">取消</button>
+
+    <script>
+      const params = new URLSearchParams(window.location.search.slice(1));
+      console.log('====params', params.get('id'));
+      const id = params.get('id');
+      // 进入页面，即通知服务端 二维码已经被扫描，模拟手机端扫描二维码的行为
+      axios.get('http://localhost:3001/qr/scan?id=' + id);
+
+      let token = '';
+
+      // 取消登录
+      document.getElementById('cancel').addEventListener('click', () => {
+        axios.get('http://localhost:3001/qr/cancel?id=' + id);
+      });
+
+      // 模拟登录
+      document.getElementById('111').addEventListener('click', () => {
+        axios
+          .get('http://localhost:3001/qr/login', {
+            params: {
+              username: '111',
+              password: '111',
+            },
+          })
+          .then((res) => (token = res.data.token));
+      });
+
+      // 模拟登录
+      document.getElementById('confirm').addEventListener('click', () => {
+        axios.get('http://localhost:3001/qr/confirm?id=' + id, {
+          headers: {
+            authorization: 'Bearer ' + token,
+          },
+        });
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,46 @@
+<html>
+  <head>
+    <script src="https://unpkg.com/axios@1.5.0/dist/axios.min.js"></script>
+  </head>
+  <body>
+    <h2>PC端二维码扫描页面</h2>
+    <img id="img" src="" alt="" />
+    <a href="" id="url"></a>
+    <div id="info"></div>
+    <script>
+      axios.get('http://localhost:3001/qr/generate').then((res) => {
+        document.getElementById('img').src = res.data.img;
+        document.getElementById('url').textContent = '生成的二维码确认页面链接：' + res.data.url;
+        document.getElementById('url').href = res.data.url;
+        queryStatus(res.data.qrcode_id); // 查询二维码状态
+      });
+
+      function queryStatus(id) {
+        axios.get('http://localhost:3001/qr/check?id=' + id).then((res) => {
+          const status = res.data.status; // 拿到二维码状态
+          let content = '';
+          switch (status) {
+            case 'noscan':
+              content = '未扫码';
+              break;
+            case 'scan-wait-confirm':
+              content = '已扫码，等待确认';
+              break;
+            case 'scan-confirm':
+              content = '已确认登录';
+              // 跳转到业务页面，完成登录
+              break;
+            case 'scan-cancel':
+              content = '已取消';
+              break;
+          }
+          document.getElementById('info').textContent = content;
+
+          if (status === 'noscan' || status === 'scan-wait-confirm') { // 未扫码 或 已扫码，等待确认
+            setTimeout(() => queryStatus(id), 1000); // 轮询查询
+          }
+        });
+      }
+    </script>
+  </body>
+</html>
