@@ -7,7 +7,9 @@
 
 ## NestJs
 
-https://docs.nestjs.com/
+[NestJs官网](https://docs.nestjs.com/)
+
+[NestJs中文文档](https://docs.nestjs.cn/)
 
 
 ### 新建项目
@@ -43,7 +45,16 @@ https://docs.nestjs.com/
 
 - pnpm install --save @nestjs/typeorm typeorm sqlite sqlite3
 
+
+**sqlite**
+
 > sqlite是直接可以在本地运行的简易的sql
+
+SQLite 不能直接与client/server SQL 数据库引擎相比(如 MySQL、 Oracle、 PostgreSQL 或 SQL Server)，因为 SQLite 试图解决一个不同的问题。
+
+Client/server SQL 数据库引擎力求实现企业数据的共享存储。它们强调可伸缩性、并发性、集中性和可控性。SQLite 致力于为单个应用程序和设备提供本地数据存储。强调经济性、效率、可靠性、独立性和简单性。
+
+SQLite竞争对手不是client/server数据库，而是本地的文件存储 fopen()。
 
 
 - npm run start后，根目录下会生成`db.sql`文件
@@ -63,27 +74,14 @@ https://docs.nestjs.com/
 
 
 
+### 模块
 
-## 部署
+- page: CRUD增删改查
 
-
-- 根目录下新建`vercel.json`
-
-
+- qr: 二维码登录: `npm run start`, 访问：`http://localhost:3001/fe/index.html`
 
 
-https://vercel.com
 
-1. 注册账号
+### 部署
 
-2. github上授权
-
-3. 添加项目
-- Add New => Project => 选择项目，Import
-
-
-4. 部署
-  - 手动部署
-  - shell部署
-  - Git actions部署
-
+> vercel部署后访问404，暂时无解....
